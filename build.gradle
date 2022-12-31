@@ -1,0 +1,57 @@
+plugins {
+	id 'application'
+	id 'java-library'
+	id 'jacoco'
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group = 'com.github.chistousov.lib'
+version = '0.1.1'
+sourceCompatibility = '1.8'
+
+mainClassName = "com.github.chistousov.cli.App"
+
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+jacocoTestReport {
+    dependsOn test 
+    reports {
+        xml.required = true
+    }
+}
+
+java {
+    withSourcesJar()
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// import a BOM
+    implementation platform('io.projectreactor:reactor-bom:2020.0.17') 
+
+    // define dependencies without versions
+    implementation 'io.projectreactor.netty:reactor-netty-core' 
+    implementation 'io.projectreactor.netty:reactor-netty-http'
+
+	implementation 'org.slf4j:slf4j-api:1.7.36'
+	implementation 'ch.qos.logback:logback-core:1.2.11'
+	implementation 'ch.qos.logback:logback-classic:1.2.11'
+
+	testImplementation(platform('org.junit:junit-bom:5.8.2'))
+	testImplementation('org.junit.jupiter:junit-jupiter')
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.awaitility:awaitility:4.2.0'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
